@@ -90,10 +90,10 @@ public class Vertices
         _cityVertexBuffer.SetData<VertexPositionNormalTexture>(verticesList.ToArray());
     }
 
-    public void Draw(Matrix viewMatrix, Matrix projectionMatrix, Matrix? worldMatrix, Texture2D texture)
+    public void DrawCity(Matrix viewMatrix, Matrix projectionMatrix, Matrix? worldMatrix, Texture2D texture)
     {
         Matrix world = worldMatrix ?? Matrix.Identity;
-        _effect.CurrentTechnique = _effect.Techniques["TexturedNoShading"];
+        _effect.CurrentTechnique = _effect.Techniques["Textured"];
         _effect.Parameters["xWorld"].SetValue(world);
         _effect.Parameters["xView"].SetValue(viewMatrix);
         _effect.Parameters["xProjection"].SetValue(projectionMatrix);

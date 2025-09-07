@@ -12,7 +12,10 @@ public class Game1 : Game
     private SpriteBatch _spriteBatch;
     private Effect _effect;
     private Camera _camera;
+    private Texture2D _sceneryTexture;
     private Drone _drone = new Drone();
+    private FloorPlan _floorPlan;
+    private Vertices _vertices;
 
     public Game1()
     {
@@ -29,6 +32,8 @@ public class Game1 : Game
         _graphics.IsFullScreen = false;
         _graphics.ApplyChanges();
         Window.Title = "Drone Swarm Simulation";
+
+        _floorPlan = new FloorPlan();
 
         base.Initialize();
     }
@@ -54,6 +59,7 @@ public class Game1 : Game
         _effect = Content.Load<Effect>("effects"); // todo change this
 
         _camera = new Camera(_device);
+        _vertices = new Vertices(_device, _effect);
         _drone.droneModel = LoadModel(_drone.AssetName);
     }
 
@@ -72,6 +78,8 @@ public class Game1 : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         // TODO: Add your drawing code here
+
+        _vertices.DrawCity(_camera.ViewMatrix, _camera.ProjectionMatrix, Matrix.Identity, _sceneryTexture);
         _drone.DrawModel(_camera.ViewMatrix, _camera.ProjectionMatrix);
         base.Draw(gameTime);
     }
