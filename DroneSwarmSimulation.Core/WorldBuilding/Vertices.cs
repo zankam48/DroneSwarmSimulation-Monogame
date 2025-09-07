@@ -90,7 +90,7 @@ public class Vertices
         _cityVertexBuffer.SetData<VertexPositionNormalTexture>(verticesList.ToArray());
     }
 
-    public void DrawCity(Matrix viewMatrix, Matrix projectionMatrix, Matrix? worldMatrix, Texture2D texture)
+    public void DrawCity(Matrix viewMatrix, Matrix projectionMatrix, Matrix? worldMatrix, Texture2D texture, Vector3 lightDirection)
     {
         Matrix world = worldMatrix ?? Matrix.Identity;
         _effect.CurrentTechnique = _effect.Techniques["Textured"];
@@ -98,6 +98,9 @@ public class Vertices
         _effect.Parameters["xView"].SetValue(viewMatrix);
         _effect.Parameters["xProjection"].SetValue(projectionMatrix);
         _effect.Parameters["xTexture"].SetValue(texture);
+        _effect.Parameters["xEnableLighting"].SetValue(true);
+        _effect.Parameters["xLightDirection"].SetValue(lightDirection);
+        _effect.Parameters["xAmbient"].SetValue(0.5f);
 
         foreach (EffectPass pass in _effect.CurrentTechnique.Passes)
         {

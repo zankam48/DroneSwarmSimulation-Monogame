@@ -7,7 +7,7 @@ namespace DroneSwarmSimulation.Models;
 public class Drone
 {
     private Motor[] _motors;
-    private string _assetName = "xwing";
+    private string _assetName = "drone";
     public string AssetName
     {
         get => _assetName;
@@ -20,7 +20,7 @@ public class Drone
 
     }
 
-    public void DrawModel(Matrix viewMatrix, Matrix projectionMatrix)
+    public void DrawModel(Matrix viewMatrix, Matrix projectionMatrix, Vector3 lightDirection)
     {
         Matrix worldMatrix = Matrix.CreateScale(0.0005f, 0.0005f, 0.0005f) *
                                 Matrix.CreateRotationY(MathHelper.Pi) *
@@ -37,6 +37,9 @@ public class Drone
                 currentEffect.Parameters["xWorld"].SetValue(xwingTransforms[mesh.ParentBone.Index] * worldMatrix);
                 currentEffect.Parameters["xView"].SetValue(viewMatrix);
                 currentEffect.Parameters["xProjection"].SetValue(projectionMatrix);
+                currentEffect.Parameters["xEnableLighting"].SetValue(true);
+                currentEffect.Parameters["xLightDirection"].SetValue(lightDirection);
+                currentEffect.Parameters["xAmbient"].SetValue(0.5f);
             }
             mesh.Draw();
         }
