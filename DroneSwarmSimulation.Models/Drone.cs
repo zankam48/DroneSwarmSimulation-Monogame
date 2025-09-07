@@ -14,17 +14,34 @@ public class Drone
         set => _assetName = value;
     }
 
-    public Model droneModel { get; set; }
-    public Drone()
+    private Vector3 _position;
+    public Vector3 Position
     {
+        get => _position;
+        set => _position = value;
+    }
 
+    public Model droneModel { get; set; }
+
+    private Quaternion _rotation;
+    public Quaternion Rotation
+    {
+        get => _rotation;
+        set => _rotation = value;
+    }
+
+    public Drone(Vector3 position, Quaternion rotation)
+    {
+        _position = position;
+        _rotation = rotation;
     }
 
     public void DrawModel(Matrix viewMatrix, Matrix projectionMatrix, Vector3 lightDirection)
     {
         Matrix worldMatrix = Matrix.CreateScale(0.0005f, 0.0005f, 0.0005f) *
-                                Matrix.CreateRotationY(MathHelper.Pi) *
-                                Matrix.CreateTranslation(new Vector3(19, 12, -5));
+                         Matrix.CreateRotationY(MathHelper.Pi) *
+                         Matrix.CreateFromQuaternion(_rotation) *
+                         Matrix.CreateTranslation(_position);
 
         Matrix[] xwingTransforms = new Matrix[droneModel.Bones.Count];
         droneModel.CopyAbsoluteBoneTransformsTo(xwingTransforms);

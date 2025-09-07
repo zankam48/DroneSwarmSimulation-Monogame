@@ -9,11 +9,12 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private GraphicsDevice _device;
-    private SpriteBatch _spriteBatch;
     private Effect _effect;
     private Camera _camera;
     private Texture2D _sceneryTexture;
-    private Drone _drone = new Drone();
+    private Vector3 _dronePosition = new Vector3(8, 1, -3);
+    private Quaternion _droneRotation = Quaternion.Identity;
+    private Drone _drone;
     private FloorPlan _floorPlan;
     private Vertices _vertices;
     private Vector3 _lightDirection = new Vector3(3, -2, 5);
@@ -36,6 +37,7 @@ public class Game1 : Game
 
         _floorPlan = new FloorPlan();
         _lightDirection.Normalize();
+        _drone = new Drone(_dronePosition, _droneRotation);
 
         base.Initialize();
     }
@@ -72,7 +74,7 @@ public class Game1 : Game
             Exit();
 
         // TODO: Add your update logic here
-
+        _camera.UpdateCamera(_dronePosition, _droneRotation);
         base.Update(gameTime);
     }
 
