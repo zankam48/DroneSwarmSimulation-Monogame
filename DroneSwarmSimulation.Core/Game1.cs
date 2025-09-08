@@ -18,6 +18,7 @@ public class Game1 : Game
     private FloorPlan _floorPlan;
     private Vertices _vertices;
     private Vector3 _lightDirection = new Vector3(3, -2, 5);
+    private float _gameSpeed = 1.0f;
 
     public Game1()
     {
@@ -60,12 +61,49 @@ public class Game1 : Game
         // TODO: use this.Content to load your game content here
 
         _device = _graphics.GraphicsDevice;
-        _effect = Content.Load<Effect>("effects"); 
+        _effect = Content.Load<Effect>("effects");
         _sceneryTexture = Content.Load<Texture2D>("texturemap");
 
         _camera = new Camera(_device);
         _vertices = new Vertices(_device, _effect);
         _drone.droneModel = LoadModel(_drone.AssetName);
+    }
+
+    private void ProcessKeyboard(GameTime gameTime)
+    {
+        float leftRightRotation = 0;
+        float upDownRotation = 0;
+
+        float turningSpeed = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000.0f;
+        turningSpeed *= 1.6f * _gameSpeed;
+
+        KeyboardState keys = Keyboard.GetState();
+
+        if (keys.IsKeyDown(Keys.Right))
+        {
+            leftRightRotation += turningSpeed;
+        }
+        if (keys.IsKeyDown(Keys.Left))
+        {
+            leftRightRotation -= turningSpeed;
+        }
+        if (keys.IsKeyDown(Keys.Down))
+        {
+            upDownRotation += turningSpeed;
+        }
+        if (keys.IsKeyDown(Keys.Up))
+        {
+            upDownRotation -= turningSpeed;
+        }
+
+        Quaternion additionalRotation = Quaternion.CreateFromAxisAngle(new Vector3(0, 0, -1), leftRightRotation) * Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), upDownRotation);
+        _droneRotation *= additionalRotation;
+    }
+
+    private void MoveForward(ref Vector3 position, Quaternion rotationQuat, float speed)
+    {
+        Vector3 addVector = Vector3.Transform(new Vector3(0, 0, -1), rotationQuat);
+        position += addVector * speed;
     }
 
     protected override void Update(GameTime gameTime)
@@ -75,6 +113,10 @@ public class Game1 : Game
 
         // TODO: Add your update logic here
         _camera.UpdateCamera(_dronePosition, _droneRotation);
+        ProcessKeyboard(gameTime);
+
+        float moveSpeed = gameTime.ElapsedGameTime.Milliseconds / 500.0f * _gameSpeed;
+        MoveForward(ref _dronePosition, _droneRotation, moveSpeed);
         base.Update(gameTime);
     }
 

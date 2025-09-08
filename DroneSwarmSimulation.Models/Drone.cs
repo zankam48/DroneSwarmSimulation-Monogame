@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -8,13 +9,15 @@ public class Drone
 {
     private Motor[] _motors;
     private string _assetName = "drone";
+    private Vector3 _position;
+    private Quaternion _rotation;
+
+    public Guid DroneID { get; set; }
     public string AssetName
     {
         get => _assetName;
         set => _assetName = value;
     }
-
-    private Vector3 _position;
     public Vector3 Position
     {
         get => _position;
@@ -23,7 +26,6 @@ public class Drone
 
     public Model droneModel { get; set; }
 
-    private Quaternion _rotation;
     public Quaternion Rotation
     {
         get => _rotation;
